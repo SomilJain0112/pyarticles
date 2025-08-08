@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import chainecho_news
+from .views import chainecho_news, crypto_prices
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('api/news/', chainecho_news, name='chainecho_news'),
+    path('api/crypto-prices/', crypto_prices, name='crypto_prices'),
 ]

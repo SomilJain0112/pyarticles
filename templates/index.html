@@ -20,12 +20,156 @@
             background: #1f2937;
             color: white;
         }
+
+        /* Price Ticker Styles */
+        .price-ticker-container {
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .price-ticker-content {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            animation: scroll-left 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .price-item {
+            display: flex;
+            align-items: center;
+            margin-right: 40px;
+            padding: 0 20px;
+            border-right: 1px solid #374151;
+            min-width: 200px;
+        }
+
+        .crypto-name {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #fbbf24;
+        }
+
+        .price {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .change {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .change.positive {
+            color: #10b981;
+        }
+
+        .change.negative {
+            color: #ef4444;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Pause animation on hover */
+        .price-ticker-container:hover .price-ticker-content {
+            animation-play-state: paused;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .price-item {
+                min-width: 150px;
+                margin-right: 20px;
+                padding: 0 10px;
+            }
+        }
+
+        /* Line clamp utilities for text truncation */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 
 <body class="bg-white text-black">
+    <!-- Price Rate Top Bar with Scrolling Effect -->
+    <div class="fixed top-0 w-full z-40 bg-gray-900 text-white overflow-hidden">
+        <div class="price-ticker-container">
+            <div class="price-ticker-content">
+                <div class="price-item">
+                    <span class="crypto-name">BTC</span>
+                    <span class="price">$43,250.50</span>
+                    <span class="change positive">+2.45%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">ETH</span>
+                    <span class="price">$2,680.30</span>
+                    <span class="change positive">+1.87%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">BNB</span>
+                    <span class="price">$312.45</span>
+                    <span class="change negative">-0.32%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">ADA</span>
+                    <span class="price">$0.485</span>
+                    <span class="change positive">+3.21%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">SOL</span>
+                    <span class="price">$98.75</span>
+                    <span class="change positive">+5.67%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">DOT</span>
+                    <span class="price">$7.23</span>
+                    <span class="change negative">-1.12%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">LINK</span>
+                    <span class="price">$15.89</span>
+                    <span class="change positive">+2.34%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">UNI</span>
+                    <span class="price">$7.56</span>
+                    <span class="change positive">+1.98%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">AVAX</span>
+                    <span class="price">$35.67</span>
+                    <span class="change negative">-0.89%</span>
+                </div>
+                <div class="price-item">
+                    <span class="crypto-name">MATIC</span>
+                    <span class="price">$0.89</span>
+                    <span class="change positive">+4.12%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
-    <nav class="fixed w-full z-50 bg-white bg-opacity-90 shadow">
+    <nav class="fixed w-full z-50 bg-white bg-opacity-90 shadow" style="top: 40px;">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <a href="/" class="text-xl font-bold">Business News</a>
@@ -39,7 +183,7 @@
     </nav>
 
     <!-- Hero -->
-    <main class="pt-24">
+    <main class="pt-32">
         <div
             class="relative w-full h-[500px] bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05')]">
             <div class="absolute inset-0 bg-black/70 flex items-center justify-center">
@@ -50,7 +194,7 @@
         </div>
 
         <!-- Articles -->
-        <div class="container mx-auto px-4 py-12 max-w-4xl" id="articles-container"></div>
+        <div class="container mx-auto px-4 py-12 max-w-7xl" id="articles-container"></div>
 
         <!-- Pagination -->
         <div class="mt-8 flex justify-center pagination" id="pagination-container"></div>
@@ -73,14 +217,85 @@
         let totalArticles = [];
         let currentPage = 0;
 
+        // Price ticker functionality
+        const cryptoData = [
+            { symbol: 'BTC', name: 'Bitcoin', price: 43250.50, change: 2.45 },
+            { symbol: 'ETH', name: 'Ethereum', price: 2680.30, change: 1.87 },
+            { symbol: 'BNB', name: 'Binance Coin', price: 312.45, change: -0.32 },
+            { symbol: 'ADA', name: 'Cardano', price: 0.485, change: 3.21 },
+            { symbol: 'SOL', name: 'Solana', price: 98.75, change: 5.67 },
+            { symbol: 'DOT', name: 'Polkadot', price: 7.23, change: -1.12 },
+            { symbol: 'LINK', name: 'Chainlink', price: 15.89, change: 2.34 },
+            { symbol: 'UNI', name: 'Uniswap', price: 7.56, change: 1.98 },
+            { symbol: 'AVAX', name: 'Avalanche', price: 35.67, change: -0.89 },
+            { symbol: 'MATIC', name: 'Polygon', price: 0.89, change: 4.12 }
+        ];
+
+        async function updatePriceTicker() {
+            const tickerContent = document.querySelector('.price-ticker-content');
+            if (!tickerContent) return;
+
+            try {
+                const response = await fetch('/api/crypto-prices/');
+                const prices = await response.json();
+                
+                if (prices.error) return;
+
+                const priceItems = tickerContent.querySelectorAll('.price-item');
+                priceItems.forEach((item, index) => {
+                    const crypto = prices[index];
+                    if (crypto) {
+                        const priceSpan = item.querySelector('.price');
+                        const changeSpan = item.querySelector('.change');
+                        
+                        if (priceSpan) {
+                            priceSpan.textContent = `$${crypto.price.toFixed(2)}`;
+                        }
+                        
+                        if (changeSpan) {
+                            const changeText = crypto.change >= 0 ? `+${crypto.change.toFixed(2)}%` : `${crypto.change.toFixed(2)}%`;
+                            changeSpan.textContent = changeText;
+                            changeSpan.className = `change ${crypto.change >= 0 ? 'positive' : 'negative'}`;
+                        }
+                    }
+                });
+            } catch (error) {
+                cryptoData.forEach(crypto => {
+                    const priceChange = (Math.random() - 0.5) * 0.1;
+                    crypto.price += crypto.price * priceChange;
+                    crypto.change += (Math.random() - 0.5) * 0.2;
+                    crypto.change = Math.max(-10, Math.min(10, crypto.change));
+                });
+            }
+        }
+
+        // Update prices every 5 seconds
+        setInterval(updatePriceTicker, 5000);
+
         async function fetchArticles() {
             try {
                 const res = await fetch('/api/news');
                 const data = await res.json();
+                
+                if (data.error) {
+                    const container = document.getElementById('articles-container');
+                    container.innerHTML = `
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                            <strong>Error:</strong> ${data.error}
+                        </div>
+                    `;
+                    return;
+                }
+                
                 totalArticles = data || [];
                 renderPage();
             } catch (e) {
-                console.error('Failed to load articles', e);
+                const container = document.getElementById('articles-container');
+                container.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <strong>Error:</strong> Failed to load articles.
+                    </div>
+                `;
             }
         }
 
@@ -94,31 +309,33 @@
             const convertTime = (timestamp) => moment.unix(Number(timestamp)).local().format('YYYY-MM-DD HH:mm:ss');
             const splitCategory = (category) => _.split(category, '|');
 
+            // Create grid container
+            container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>';
+            const gridContainer = container.querySelector('.grid');
+
             articles.forEach((article, index) => {
                 const categories = splitCategory(article.category)
                 const view_categories = categories.map(item =>
                     `<div class="bg-blue-100 rounded-xl px-4 py-1 text-sm">${item}</div>`
                 ).join('');
 
-                container.innerHTML += `
-          <article class="mb-12 ${index !== articles.length - 1 ? 'pb-12 border-b border-gray-200' : ''}">
-            <div class="flex flex-col md:flex-row gap-4">
-              <img src="${article.image_url}" class="w-full md:w-64 md:h-64 mx-auto" alt="news" />
-              <div>
-                <h2 class="text-4xl font-bold mb-2 text-black hover:text-[#0085A1] cursor-pointer">
-                  <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>
-                </h2>
-                <div class="text-lg">
-                  ${article.body.length > 255
-                        ? article.body.slice(0, 200).split(' ').slice(0, -1).join(' ') + '...'
-                        : article.body}
-                </div>
-                <div class="text-gray-500 py-2">
-                  ${convertTime(article.published_on)}
-                </div>
-                <div class="flex flex-row flex-wrap gap-2 text-blue-600">
-                  ${view_categories}
-                </div>
+                gridContainer.innerHTML += `
+          <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <img src="${article.image_url}" class="w-full h-48 object-cover" alt="news" />
+            <div class="p-6">
+              <h2 class="text-xl font-bold mb-3 text-black hover:text-[#0085A1] cursor-pointer line-clamp-2">
+                <a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>
+              </h2>
+              <div class="text-sm text-gray-600 mb-4 line-clamp-3">
+                ${article.body.length > 150
+                      ? article.body.slice(0, 150).split(' ').slice(0, -1).join(' ') + '...'
+                      : article.body}
+              </div>
+              <div class="text-gray-500 text-xs mb-3">
+                ${convertTime(article.published_on)}
+              </div>
+              <div class="flex flex-row flex-wrap gap-2 text-blue-600">
+                ${view_categories}
               </div>
             </div>
           </article>
